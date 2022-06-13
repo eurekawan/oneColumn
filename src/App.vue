@@ -30,7 +30,7 @@ const testData: ColumnProps[] = [
   }
 ]
 const currentUser: UserProps = {
-  isLogin:false
+  isLogin:true
 }
 
 export default defineComponent({
