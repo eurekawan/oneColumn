@@ -17,19 +17,6 @@ export default defineComponent({
       isOpen.value = !isOpen.value
     }
     const isClickOutside = useClickOutside(dropdownRdef)
-    // const handler = (e: MouseEvent) => {
-    //   if (dropdownRdef.value) {
-    //     if (!dropdownRdef.value.contains(e.target as HTMLElement) && isOpen.value) {
-    //       isOpen.value = false
-    //     }
-    //   }
-    // }
-    // onMounted(() => {
-    //   document.addEventListener('click',handler)
-    // })
-    // onUnmounted(() => {
-    //   document.removeEventListener('click',handler)
-    // })
     watch(isClickOutside,() => {
       if (isOpen.value && isClickOutside.value) {
         isOpen.value = false
