@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ColumnList, { ColumnProps } from './components/ColumnList.vue'
 import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
 import validateInput, { RulesProp } from './components/validateInput.vue'
+import ValidateForm from './components/ValidateForm.vue'
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -39,9 +40,11 @@ export default defineComponent({
   components: {
     ColumnList,
     GlobalHeader,
-    validateInput
+    validateInput,
+    ValidateForm
   },
   setup() {
+    const inputRef = ref<any>()
     const emailVal = ref('')
     const passwordVal = ref('')
     const emailRules: RulesProp = [
@@ -49,29 +52,20 @@ export default defineComponent({
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
     const passwordRules: RulesProp = [
-      { type: 'required', message: '密码不能为空' },
-      // { type: 'email', message: '请输入正确的电子邮箱格式' }
+      { type: 'required', message: '密码不能为空' }
     ]
-    const emailRef = reactive({
-      val: '',
-      error: false,
-      message:''
-    })
-    const passwordRef = reactive({
-      val: '',
-      error: false,
-      message:''
-    })
+    const onFormSubmit = (result: boolean) => {
+      console.log(result);
+    }
     return {
       list: testData,
       currentUser,
-      emailRef,
       emailRules,
       emailVal,
-      passwordRef,
       passwordRules,
       passwordVal,
-
+      onFormSubmit,
+      inputRef
     }
   }
 })
@@ -81,22 +75,27 @@ export default defineComponent({
   <div class="container">
     <global-header :user="currentUser"></global-header>
     <!-- <column-list :list="list"></column-list> -->
-    <form action="">
+    <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
         <validate-input :rules="emailRules" v-model="emailVal"
-        placeholder="请输入邮箱地址"
-        type="text"
+          placeholder="请输入邮箱地址"
+          type="text"
+          ref="inputRef"
         />
       </div>
       <div class="mb-3">
         <label class="form-label">密码</label>
         <validate-input :rules="passwordRules" v-model="passwordVal"
-        placeholder="请输入密码"
-        type="text"
+          placeholder="请输入密码"
+          type="password"
         />
       </div>
-  </form>
+      <!-- v-slot:submit 的缩写 -->
+      <template #submit> 
+        <span class="btn btn-danger">submit</span>
+      </template>
+  </validate-form>
   </div>
 </template>
 
