@@ -2,11 +2,7 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import GlobalHeader, { UserProps } from './components/GlobalHeader.vue'
-const currentUser: UserProps = {
-  isLogin: false,
-  name:'raina'
-}
+import GlobalHeader from './components/GlobalHeader.vue'
 export default defineComponent({
   name: 'App',
   components: {
