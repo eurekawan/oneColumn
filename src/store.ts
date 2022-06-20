@@ -20,6 +20,14 @@ const store = createStore<GlobalDataProps>({
     login(state) {
       state.user = {...state.user, isLogin : true,name: 'raina'}
     }
+  },
+  getters: {
+    getColumnById: (state) => (id: number) => {
+      return state.columns.find(c => c.id === id)
+    },
+    getColumnByCid: (state) => (cid: number) => {
+      return state.posts.filter(post => post.columnId === cid)
+    },
   }
 })
 
