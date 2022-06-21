@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createStore } from 'vuex'
+import { createStore, Commit} from 'vuex'
 
 interface userProps {
   isLogin: boolean;
@@ -29,12 +29,18 @@ export interface PostProps {
   column: string;
 }
 export interface GlobalDataProps {
+  loading: boolean;
   columns: ColumnProps[];
   posts: PostProps[];
   user: userProps;
 }
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+  const { data } = await axios.get(url)
+  commit(mutationName, data)
+}
 const store = createStore<GlobalDataProps>({
   state: {
+    loading: false,
     columns: [],
     posts: [],
     user: { isLogin : true,name: 'raina', columnId: 1}
@@ -54,24 +60,38 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts(state, rawData) {
       state.posts = [rawData.data.list]
+    },
+    setLoading(state, status) {
+      state.loading = status
     }
   },
   actions: {
-    fetchColumns(context) { // actions接收一个与stores实例具有相同属性和方法的context对象
-      axios.get('/columns').then(resp => {
-      context.commit('fetchColumns', resp.data)
-      })
+    // -----把下面这些较为重复的再抽离出来形成函数: getAndCommit
+    // async fetchColumns({ commit }) {
+    //   const { data } = await axios.get('/columns') // actions接收一个与stores实例具有相同属性和方法的context对象
+    //   commit('fetchColumns',data)
+    //   // axios.get('/columns').then(resp => {
+    //   // commit('fetchColumns', resp.data)
+    //   // })
+    // },
+    // async fetchColumn({ commit },  cid) {
+    //   const { data } = await axios.get(`/columns/${cid}`)
+    //     commit('fetchColumn', data)
+    // },
+    // async fetchPosts({ commit },  cid) {
+    //   const { data } = await axios.get(`/columns/${cid}/posts`)
+    //     commit('fetchPosts', data)
+    // }
+     async fetchColumns({ commit }) {
+      getAndCommit('/columns', 'fetchColumns', commit)
     },
-    fetchColumn({ commit },  cid) {
-      axios.get(`/columns/${cid}`).then(resp => {
-        commit('fetchColumn', resp.data)
-      })
+    async fetchColumn({ commit }, cid) {
+      getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
     },
-    fetchPosts({ commit },  cid) {
-      axios.get(`/columns/${cid}/posts`).then(resp => {
-        commit('fetchPosts', resp.data)
-      })
+    async fetchPosts({ commit }, cid) {
+      getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit)
     }
+
   },
   getters: {
     getColumnById: (state) => (id: string) => {
