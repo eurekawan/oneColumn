@@ -59,7 +59,7 @@ const store = createStore<GlobalDataProps>({
       state.columns = [rawData.data]
     },
     fetchPosts(state, rawData) {
-      state.posts = [rawData.data.list]
+      state.posts = rawData.data.list
     },
     setLoading(state, status) {
       state.loading = status
