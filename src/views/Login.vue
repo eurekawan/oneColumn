@@ -32,7 +32,7 @@ export default defineComponent({
         store.dispatch('loginAndFetch', payload).then(data => {
           router.push('/')
         }).catch(e => {
-          console.log(e);
+          console.log('发生错误',e);
           
         })
         // router.push('/')

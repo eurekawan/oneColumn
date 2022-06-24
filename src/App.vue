@@ -4,6 +4,7 @@ import { useStore } from 'vuex'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from './components/Loader.vue'
+import Message from './components/Message.vue'
 import { GlobalDataProps } from './store'
 import axios from 'axios'
 
@@ -11,7 +12,8 @@ export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader
+    Loader,
+    Message
   },
   setup() {
     const store = useStore<GlobalDataProps>()
@@ -23,8 +25,7 @@ export default defineComponent({
       if (!currentUser.value.isLogin && token.value) {
         axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
         store.dispatch('fetchCurrentUser') 
-        console.log('currentUser',currentUser);    
-      }
+      }    
     })
     return {
       currentUser,
@@ -38,8 +39,8 @@ export default defineComponent({
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <h1>{{error}}</h1>
     <loader v-if="isLoading"></loader>
+    <message type = "error" :message="error.message" v-if="error.status"></message>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
