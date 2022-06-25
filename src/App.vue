@@ -29,7 +29,7 @@ export default defineComponent({
     watch(() => error.value.status, () => {  // 因为值变更时才执行函数，所以要在拦截器恢复status的值，不然错误提示只会弹出一次
       const { status, message } = error.value
       if (status && message) {
-        createMessage(message, 'error')
+        createMessage(message, 'error', 2000)
       }
     })
     return {
