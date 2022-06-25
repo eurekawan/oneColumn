@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent ,onUnmounted} from 'vue'
+import { defineComponent } from 'vue'
+import useDOMCreate from '@/hooks/useDOMCreate'
 
 export default defineComponent({
   props: {
@@ -12,12 +13,13 @@ export default defineComponent({
   },
   setup() {
     // 不用在 index.html 中添加 <div id="back"></div> 了
-    const node = document.createElement('div')
-    node.id = 'back'
-    document.body.appendChild(node)
-    onUnmounted(() => {
-      document.body.removeChild(node)
-    })
+    // const node = document.createElement('div')
+    // node.id = 'back'
+    // document.body.appendChild(node)
+    // onUnmounted(() => {
+    //   document.body.removeChild(node)
+    // })
+    useDOMCreate('back')
   }
 })
 </script>

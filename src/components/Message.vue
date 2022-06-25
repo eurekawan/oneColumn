@@ -47,7 +47,8 @@ export default defineComponent({
 
 <style>
 .close {
-  background-color: #f8d7da;
+  background-color: inherit;
+  /* background-color: #f8d7da; */
   border:none;
 }
 </style>

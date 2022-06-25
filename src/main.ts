@@ -9,6 +9,7 @@ axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 // 下面的 icode 值是从慕课网获取的 token 值，可以在课程右侧的项目接口校验码找到
 axios.interceptors.request.use(config => {
   store.commit('setLoading', true)
+  store.commit('setError', { status: false, message: '' })
   // get 请求，添加到 url 中
   config.params = { ...config.params, icode: '18D23BAE42806AAC' }
   // 其他请求，添加到 body 中

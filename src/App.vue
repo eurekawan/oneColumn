@@ -1,10 +1,10 @@
 <script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from './components/Loader.vue'
-import Message from './components/Message.vue'
+import createMessage from './components/createMessage'
 import { GlobalDataProps } from './store'
 import axios from 'axios'
 
@@ -12,8 +12,7 @@ export default defineComponent({
   name: 'App',
   components: {
     GlobalHeader,
-    Loader,
-    Message
+    Loader
   },
   setup() {
     const store = useStore<GlobalDataProps>()
@@ -26,6 +25,12 @@ export default defineComponent({
         axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
         store.dispatch('fetchCurrentUser') 
       }    
+    })
+    watch(() => error.value.status, () => {  // 因为值变更时才执行函数，所以要在拦截器恢复status的值，不然错误提示只会弹出一次
+      const { status, message } = error.value
+      if (status && message) {
+        createMessage(message, 'error')
+      }
     })
     return {
       currentUser,
@@ -40,7 +45,9 @@ export default defineComponent({
   <div class="container">
     <global-header :user="currentUser"></global-header>
     <loader v-if="isLoading"></loader>
-    <message type = "error" :message="error.message" v-if="error.status"></message>
+    <!-- 此前的形式调用message -->
+    <!-- <message type = "error" :message="error.message" v-if="error.status"></message>  -->
+
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
