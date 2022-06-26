@@ -31,12 +31,12 @@ export default defineComponent({
           password: passwordVal.value
         }
         store.dispatch('loginAndFetch', payload).then(data => {
-          createMessage('登录成功 两秒以后跳转首页', 'success')
+          createMessage('登录成功 两秒以后跳转首页', 'success',2000)
           setTimeout(() => {
             router.push('/')
           },2000)
         }).catch(e => {
-          console.log('发生错误',e);
+          console.log(e);
           
         })
         // router.push('/')

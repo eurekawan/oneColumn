@@ -20,12 +20,13 @@ export default defineComponent({
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
     const error = computed(() => store.state.error)
-    onMounted(() => {
-      if (!currentUser.value.isLogin && token.value) {
-        axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
-        store.dispatch('fetchCurrentUser') 
-      }    
-    })
+    // 在 路由守卫 处统一处理
+    // onMounted(() => {
+    //   if (!currentUser.value.isLogin && token.value) {
+    //     axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
+    //     store.dispatch('fetchCurrentUser') 
+    //   }    
+    // })
     watch(() => error.value.status, () => {  // 因为值变更时才执行函数，所以要在拦截器恢复status的值，不然错误提示只会弹出一次
       const { status, message } = error.value
       if (status && message) {

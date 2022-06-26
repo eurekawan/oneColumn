@@ -49,12 +49,13 @@ export default defineComponent({
         </div>
       </div>
     </section>
+    <!-- 测试 Uploader 组件
     <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUPloaded">
-    <!-- slot 父组件取得子组件的值 -->
+    slot 父组件取得子组件的值 
       <template #uploaded="dataProps">
         <img :src="dataProps.uploadedData.data.url" width="500">
       </template>
-    </uploader>
+    </uploader> -->
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
   </div>
