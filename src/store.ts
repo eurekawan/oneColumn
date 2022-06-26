@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { createStore, Commit} from 'vuex'
 
+export interface ResponseType<p = {}> {
+  code: number;
+  message: string;
+  data: p;
+}
 export interface UserProps {
   isLogin: boolean;
   nickName?: string;
@@ -8,7 +13,7 @@ export interface UserProps {
   column?: string;
   email?: string;
 }
-interface ImageProps {
+export interface ImageProps {
   _id?: string;
   url?: string;
   createAt?: string;
