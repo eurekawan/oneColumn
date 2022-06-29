@@ -17,6 +17,7 @@ export interface ImageProps {
   _id?: string;
   url?: string;
   createAt?: string;
+  fitUrl?: string;
 }
 export interface ColumnProps {
 
@@ -26,13 +27,14 @@ export interface ColumnProps {
   description: string;
 }
 export interface PostProps {
-  _id: string;
+  _id?: string;
   title: string;
   excerpt?: string;
   content?: string;
-  image?: ImageProps;
-  createdAt: string;
+  image?: ImageProps | string;
+  createdAt?: string;
   column: string;
+  author?: string;
 }
 export interface GlobalErrorProps{
   status: boolean;
@@ -131,6 +133,9 @@ const store = createStore<GlobalDataProps>({
     },
     login({ commit }, payload) {
       return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    createPost({ commit }, payload) {
+      return postAndCommit('/posts', 'createPost', commit, payload)
     },
     // 组合 action
     loginAndFetch({ dispatch }, loginData) {
