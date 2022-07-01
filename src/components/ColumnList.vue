@@ -2,6 +2,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { ColumnProps } from '../store'
+// import { getAssetsImages } from '../helper'
+import { addColumnAvatar } from '../helper'
 
 export default defineComponent({
   name: 'ColumnList',
@@ -12,18 +14,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const getAssetsImages = (name:string)=> {
-      return new URL(`/src/assets/${name}`, import.meta.url).href;
-    }
+    // const getAssetsImages = (name:string)=> {
+    //   return new URL(`/src/assets/${name}`, import.meta.url).href;
+    // }
     const columnList = computed(() => {
       return props.list.map(column => {
-        if (!column.avatar) {
-         column.avatar = {
-            url: getAssetsImages('column.jpg')
-          }
-        } else {
-          column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
-        }
+        // if (!column.avatar) {
+        //  column.avatar = {
+        //     url: getAssetsImages('column.jpg')
+        //   }
+        // } else {
+        //   column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
+        // }
+        // return column
+        addColumnAvatar(column, 50, 50)
         return column
       })
     })

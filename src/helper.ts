@@ -1,5 +1,9 @@
 import { ColumnProps, ImageProps, UserProps } from './store'
 
+export function getAssetsImages(name: string) {
+  return new URL(`/src/assets/${name}`, import.meta.url).href;
+}
+
 export function generateFitUrl(data: ImageProps, width: number, height: number, format = ['m_pad']) {
   if (data && data.url) {
     const formatStr = format.reduce((prev, current) => {
@@ -9,16 +13,17 @@ export function generateFitUrl(data: ImageProps, width: number, height: number, 
   }
 }
 
-// export function addColumnAvatar(data: ColumnProps | UserProps, width: number, height: number) {
-//   if (data.avatar) {
-//     generateFitUrl(data.avatar, width, height)
-//   } else {
-//     const parseCol = data as ColumnProps
-//     data.avatar = {
-//       fitUrl: require(parseCol.title ? '@/assets/column.jpg' : '@/assets/avatar.jpg')
-//     }
-//   }
-// }
+export function addColumnAvatar(data: ColumnProps | UserProps, width: number, height: number) {
+  if (data.avatar) {
+    generateFitUrl(data.avatar, width, height)
+  } else {
+    const parseCol = data as ColumnProps
+    data.avatar = {
+      // fitUrl: require(parseCol.title ? '@/assets/column.jpg' : '@/assets/avatar.jpg')
+      fitUrl: getAssetsImages(parseCol.title ? 'column.jpg' : 'avatar.jpg')
+    }
+  }
+}
 
 interface CheckCondition {
   format?: string[];
