@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosRequestConfig} from 'axios'
 import { createStore, Commit} from 'vuex'
 
 export interface ResponseType<p = {}> {
@@ -36,7 +36,7 @@ export interface PostProps {
   image?: ImageProps | string;
   createdAt?: string;
   column: string;
-  author?: string;
+  author?: string | UserProps;
 }
 export interface GlobalErrorProps{
   status: boolean;
@@ -57,6 +57,11 @@ const getAndCommit = async (url: string, mutationName: string, commit: Commit) =
 }
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
   const { data } = await axios.post(url, payload)
+  commit(mutationName, data)
+  return data
+}
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = {method: 'get'}) => {
+  const { data } = await axios(url, config)
   commit(mutationName, data)
   return data
 }
@@ -84,6 +89,15 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPost(state, rawData) {
       state.posts = [rawData.data]
+    },
+    updatePost(state, { data }) {
+      state.posts = state.posts.map(post => {
+        if (post._id === data._id) {
+          return data
+        } else {
+          return post
+        }
+      })
     },
     setLoading(state, status) {
       state.loading = status
@@ -135,6 +149,12 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPost({ commit }, id) {
       return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
+    },
+    updatePost({ commit }, { id, payload }) {
+      return asyncAndCommit(`/post/${id}`, 'updatePost', commit, {
+        method: 'patch',
+        data: payload
+      })
     },
     fetchCurrentUser({ commit }) {
       return getAndCommit('/user/current', 'fetchCurrentUser', commit)
