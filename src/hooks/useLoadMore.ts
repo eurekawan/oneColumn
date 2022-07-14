@@ -16,8 +16,8 @@ params: LoadParams={currentPage: 2, pageSize: 5}) => {
   // }
   // ----------👇使用计算属性获得响应式对象的最新之
   const requstParams =  computed(() => ({ // 发送请求时用到的参数
-  currentPage: currentPage.value,
-  pageSize: params.pageSize
+    currentPage: currentPage.value,
+    pageSize: params.pageSize
   }))
   const loadMorePage = () => {
     store.dispatch(actionName, requstParams.value).then(() => {
