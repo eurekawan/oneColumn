@@ -154,7 +154,7 @@ const store = createStore<GlobalDataProps>({
       return getAndCommit(`/posts/${id}`, 'fetchPost', commit)
     },
     updatePost({ commit }, { id, payload }) {
-      return asyncAndCommit(`/post/${id}`, 'updatePost', commit, {
+      return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, {
         method: 'patch',
         data: payload
       })
@@ -169,7 +169,7 @@ const store = createStore<GlobalDataProps>({
       return postAndCommit('/posts', 'createPost', commit, payload)
     },
     deletePost({ commit }, id) {
-      return asyncAndCommit(`/post/${id}`,'deletePost', commit, { method: 'delete'})
+      return asyncAndCommit(`/posts/${id}`,'deletePost', commit, { method: 'delete'})
     },
     // 组合 action
     loginAndFetch({ dispatch }, loginData) {
