@@ -3,6 +3,7 @@ import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps, ResponseType, ImageProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
+import useLoadMore from '../hooks/useLoadMore'
 // import Uploader from '../components/Uploader.vue'
 // import createMessage from '../components/createMessage'
 export default defineComponent({
@@ -13,11 +14,13 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const total = computed(() => store.state.columns.total )
     onMounted(() => {
-      store.dispatch('fetchColumns')
+      store.dispatch('fetchColumns',{ pageSize: 3})
     })
     // const list = computed(() => store.state.columns) // 数组时的写法
     const list = computed(() => store.getters.getColumns) // 数组时的写法
+    const { loadMorePage, isLastPage } = useLoadMore('fetchColumns',total, {pageSize: 3, currentPage: 2 })
     // const beforeUpload = (file: File) => {
     //   const isJPG = file.type === 'image/jpeg'
     //   if (!isJPG) {
@@ -30,6 +33,8 @@ export default defineComponent({
     // }
     return {
       list,
+      loadMorePage,
+      isLastPage
       // beforeUpload,
       // onFileUPloaded
     }
@@ -59,5 +64,12 @@ export default defineComponent({
     </uploader> -->
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
+    <button 
+    class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 d-block"
+    @click="loadMorePage"
+    v-if="!isLastPage"
+    >
+    加载更多
+    </button>
   </div>
 </template>
