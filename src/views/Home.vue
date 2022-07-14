@@ -3,34 +3,35 @@ import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps, ResponseType, ImageProps } from '../store'
 import ColumnList from '../components/ColumnList.vue'
-import Uploader from '../components/Uploader.vue'
-import createMessage from '../components/createMessage'
+// import Uploader from '../components/Uploader.vue'
+// import createMessage from '../components/createMessage'
 export default defineComponent({
   name: 'Home',
   components: {
     ColumnList,
-    Uploader
+    // Uploader
   },
   setup() {
     const store = useStore<GlobalDataProps>()
     onMounted(() => {
       store.dispatch('fetchColumns')
     })
-    const list = computed(() => store.state.columns)
-    const beforeUpload = (file: File) => {
-      const isJPG = file.type === 'image/jpeg'
-      if (!isJPG) {
-        createMessage('上传图片只能是 JPG 格式', 'error')
-      }
-      return isJPG
-    }
-    const onFileUPloaded = (rawData: ResponseType<ImageProps>) => {
-      createMessage(`上传图片ID ${rawData.data._id}`,'success',2000)
-    }
+    // const list = computed(() => store.state.columns) // 数组时的写法
+    const list = computed(() => store.getters.getColumns) // 数组时的写法
+    // const beforeUpload = (file: File) => {
+    //   const isJPG = file.type === 'image/jpeg'
+    //   if (!isJPG) {
+    //     createMessage('上传图片只能是 JPG 格式', 'error')
+    //   }
+    //   return isJPG
+    // }
+    // const onFileUPloaded = (rawData: ResponseType<ImageProps>) => {
+    //   createMessage(`上传图片ID ${rawData.data._id}`,'success',2000)
+    // }
     return {
       list,
-      beforeUpload,
-      onFileUPloaded
+      // beforeUpload,
+      // onFileUPloaded
     }
   }
 })
@@ -49,13 +50,13 @@ export default defineComponent({
         </div>
       </div>
     </section>
-    <!-- 测试 Uploader 组件 -->
+      <!-- note:测试 Uploader 组件
     <uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUPloaded">
-    <!-- slot 父组件取得子组件的值  -->
+      note:slot 父组件取得子组件的值
       <template #uploaded="dataProps">
         <img :src="dataProps.uploadedData.data.url" width="500">
       </template>
-    </uploader>
+    </uploader> -->
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <column-list :list="list"></column-list>
   </div>
