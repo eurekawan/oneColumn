@@ -35,7 +35,7 @@ export default defineComponent({
     <slot name="default"></slot>
     <div class="submit_area" @click.prevent="submitForm">
       <slot name="submit">
-        <button type="submit" class="btn btn-primary">提交</button>
+        <button type="submit" class="btn btn-primary">登录</button>
       </slot>
     </div>
   </form>

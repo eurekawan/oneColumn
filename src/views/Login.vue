@@ -55,7 +55,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="login-page">
+  <div class="login-page p-3 w-50 mx-auto">
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
