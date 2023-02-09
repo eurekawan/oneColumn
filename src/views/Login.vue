@@ -65,6 +65,7 @@ export default defineComponent({
           type="text"
           ref="inputRef"
         />
+        <div style="font-size: 12px; color:grey">账号:111@test.com    密码:111111</div>
       </div>
       <div class="mb-3">
         <label class="form-label">密码</label>

@@ -5,6 +5,7 @@ import { useStore } from 'vuex'
 import { ColumnProps, GlobalDataProps } from '../store'
 import PostList from '../components/PostList.vue'
 import { addColumnAvatar } from '../helper'
+import useLoadMore from '../hooks/useLoadMore'
 
 export default defineComponent({
   components: {
@@ -14,10 +15,6 @@ export default defineComponent({
     const route = useRoute()
     const store = useStore<GlobalDataProps>()
     const currentId = route.params.id // +可以让string转化为number
-    onMounted(() => {
-      store.dispatch('fetchColumn', currentId)
-      store.dispatch('fetchPosts', currentId)
-    })
     // const column = testData.find(c => c.id === currentId)
     // const list = testPosts.filter(post => post.columnId === currentId)
 
@@ -31,10 +28,20 @@ export default defineComponent({
       return selectColumn
     }) 
 
+    const total = computed(() => store.state.posts.total)
+    const currentPage = computed(() => store.state.posts.currentPage)
+    onMounted(() => {
+      store.dispatch('fetchColumn', currentId)
+      store.dispatch('fetchPosts', { cid: currentId,params:{ pageSize: 3 }})
+    })
+
     const list = computed(() => store.getters.getPostsByCid(currentId))
+    const { loadMorePage, isLastPage } = useLoadMore('fetchPosts',total, {pageSize: 3, currentPage: (currentPage.value?currentPage.value+1:2) })
     return {
       column,
-      list
+      list,
+      isLastPage,
+      loadMorePage
     }
   }
 })
@@ -52,6 +59,12 @@ export default defineComponent({
       </div>
     </div>
     <post-list :list="list"></post-list>
+    <button 
+    class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 d-block"
+    @click="loadMorePage"
+    v-if="!isLastPage"
+    >
+    </button> 
   </div>
 </template>
 

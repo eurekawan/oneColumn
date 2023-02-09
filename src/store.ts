@@ -54,7 +54,7 @@ export interface GlobalDataProps {
   // columns: ColumnProps[];
   // posts: PostProps[];
   columns: { data: ListProps<ColumnProps>; currentPage: number; total:number };
-  posts: { data: ListProps<PostProps>; loadedColumns: string[] };
+  posts: { data: ListProps<PostProps>; loadedColumns: string[]; currentPage: number;total:number };
   user: UserProps;
 }
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
@@ -84,7 +84,7 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     loading: false,
     columns: { data: {}, currentPage: 0, total: 0 },
-    posts: { data: {}, loadedColumns: [] },
+    posts: { data: {}, currentPage:0,loadedColumns: [], total: 0 },
     user: { isLogin: false }
   },
   mutations: {
@@ -111,6 +111,9 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, { data: rawData, extraData: columnId }) {
       state.posts.data = { ...state.posts.data, ...arrToObj(rawData.data.list)}
       state.posts.loadedColumns.push(columnId)
+      const { count, currentPage } = rawData.data
+      state.posts.total = count
+      state.posts.currentPage = currentPage*1
     },
     fetchPost(state, rawData) {
       state.posts.data[rawData.data._id] = rawData.data
@@ -182,9 +185,11 @@ const store = createStore<GlobalDataProps>({
         return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit)
       }
     },
-    fetchPosts({ state, commit }, cid) {
+    fetchPosts({ state, commit }, args = { cid :0, params : {} }) {
+      const { currentPage = 1, pageSize = 6 } = args.params
+      const cid = args.cid
       if (!state.posts.loadedColumns.includes(cid)) {
-        return asyncAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit,{ method: 'get' }, cid)
+        return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit,{ method: 'get' }, cid)
       }
     },
     fetchPost({ state, commit }, id) {
